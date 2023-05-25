@@ -18,7 +18,6 @@ for i in range(len(threshold)):
             if(threshold[i-1,j]==0 or threshold[i+1,j]==0 or threshold[i,j+1]==0 or threshold[i,j-1]==0 or threshold[i-1,j+1]==0 or threshold[i+1,j+1]==0 or threshold[i+1,j-1]==0 or threshold[i-1,j-1]==0):
                 outline.append([i,j])
 
-
 #Make all pixel values have intensity 0(i.e make all pixels black)
 for i in range(len(threshold)):
     for j in range(len(threshold[i])):
