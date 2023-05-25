@@ -22,8 +22,8 @@ for i in range(len(threshold)):
                 outline.append([i,j])
                 count+=1
 
+'''
 
-#for i in range(len(threshold)):
 for i in range(len(threshold)):
     for j in range(len(threshold[i])):
         print(i,j)
@@ -32,6 +32,15 @@ for i in range(len(threshold)):
                 threshold[i,j]=255
                 break
             else: threshold[i,j]=0
+'''
+
+for i in range(len(threshold)):
+    for j in range(len(threshold[i])):
+        threshold[i,j] = 0
+
+for k in range(len(outline)):
+    m,n = outline[k]
+    threshold[m,n] = 255
 
 #Step 4: Save the binarized image as a new PNG file
-cv2.imwrite('binarized_image.png', threshold)
+cv2.imwrite('final_image.png', threshold)
