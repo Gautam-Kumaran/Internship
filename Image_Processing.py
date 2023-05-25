@@ -12,26 +12,26 @@ _ , threshold = cv2.threshold(gray, 0, 255, cv2.THRESH_OTSU)
 
 
 count = 0
-outline = np.empty(len(threshold))
+outline = []
 
 firstvalue = True
 for i in range(len(threshold)):
     for j in range(len(threshold[i])):
         if(threshold[i,j]==255):
             if(threshold[i-1,j]==0 or threshold[i+1,j]==0 or threshold[i,j+1]==0 or threshold[i,j-1]==0 or threshold[i-1,j+1]==0 or threshold[i+1,j+1]==0 or threshold[i+1,j-1]==0 or threshold[i-1,j-1]==0):
-                np.append(outline[i],j)
+                outline.append([i,j])
                 count+=1
 
-print(outline)
-'''
+
 #for i in range(len(threshold)):
-i = 22
-for j in range(178,240):
-    print(i,j)
-    for k in range(len(outline[i])):
-        if outline[i,k] == [i,j]:
-            threshold[i,j]=255
-        else: threshold[i,j]=0
-'''
+for i in range(len(threshold)):
+    for j in range(len(threshold[i])):
+        print(i,j)
+        for k in range(len(outline)):
+            if outline[k] == [i,j]:
+                threshold[i,j]=255
+                break
+            else: threshold[i,j]=0
+
 #Step 4: Save the binarized image as a new PNG file
 cv2.imwrite('binarized_image.png', threshold)
