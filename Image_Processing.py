@@ -13,6 +13,7 @@ _ , threshold = cv2.threshold(gray, 0, 255, cv2.THRESH_OTSU)
 cv2.imwrite('Binarized_image.png', threshold)
 
 #Determine if pixel is boundary by checking if any of surrounding pixels are black and assign boundary pixels to Outline(array)
+
 outline = []
 for x in range(len(threshold)):
     for y in range(len(threshold[x])):
@@ -37,20 +38,14 @@ for i in range(len(outline)):
 #Save the binarized and outlined image as a new PNG file
 cv2.imwrite('Outline_image.png', threshold)
 
-outline = cv2.imread('Outline_image.png',cv2.IMREAD_GRAYSCALE)
-
-number , labels, stats, _ = cv2.connectedComponentsWithStats(outline, connectivity=8)
-
-print(number)
+#Find all shapes(multiple pixels connected to each other)
+_ , labels, stats, _ = cv2.connectedComponentsWithStats(threshold, connectivity=8)
 
 # Find the index of the largest connected component
-largest_component_index = np.argmax(stats[1:, cv2.CC_STAT_AREA]) + 1
+largest_component_index = np.argmax(stats[1:, cv2.CC_STAT_AREA]) +1
 
-# Create a mask
-mask = np.where(labels == largest_component_index, 255, 0).astype(np.uint8)
-
-# Apply the mask to the original image
-result = cv2.bitwise_and(outline, mask)
+# Make only the largest connected component white
+mask = np.where(labels == largest_component_index, 255, 0)
 
 # Save the resulting image
-cv2.imwrite("result.png", result)
+cv2.imwrite("result.png", mask)
