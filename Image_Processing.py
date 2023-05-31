@@ -97,24 +97,6 @@ mask = np.where(labels == largest_component_index, 255, 0).astype(np.uint8)
 #Save the resulting image
 cv2.imwrite("result.png", mask)
 
-
-# find the largest contour in the threshold image
-cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-	cv2.CHAIN_APPROX_SIMPLE)
-cnts = imutils.grab_contours(cnts)
-c = max(cnts, key=cv2.contourArea)
-
-print(c)
-
-# draw the shape of the contour on the output image, compute the
-# bounding box, and display the number of points in the contour
-output = mask.copy()
-cv2.drawContours(output, [c], -1, (0, 255, 0), 1)
-(x, y, w, h) = cv2.boundingRect(c)
-
-cv2.imwrite("Original Contour.png", output)
-cv2.waitKey(0)
-
 #Initialise variables and lists
 oldpoints = []
 currentpoint = Find_Beginning_Piece(stats[1], mask)
