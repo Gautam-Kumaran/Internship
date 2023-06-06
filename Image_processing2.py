@@ -4,7 +4,7 @@ import math
 import matplotlib.pyplot as plt
 
 #Store the PNG image
-image = cv2.imread('New_Particle.png')
+image = cv2.imread('circle.png')
 
 #Convert the image to grayscale
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -28,8 +28,8 @@ for i in range(len(c)):
 	y= c[i,0,1]
 	thresh[y,x] = 255
 cv2.imwrite("Original Contour2.png", thresh)
-print(len(c))
 
+print(len(c))
 
 def distance_calculation(point1,point2):
     return(((point1[0]-point2[0])**2+(point1[1]-point2[1])**2)**(1/2))*1.04
@@ -39,31 +39,36 @@ contour = c.squeeze()
 
 area = cv2.contourArea(c)*1.0816
 print(area)
-distance = (math.sqrt((4*area)/math.pi))*0.8
-beginning_distance = distance
-perimeter = []
+beginning_distance = (math.sqrt((4*area)/math.pi))
+distance = beginning_distance 
+p = []
 BD_Ratio = []
 count = np.zeros(len(c))
+check = 0
 
 while True:
 	sum = 0
-	count = np.zeros(len(c))
+	perimeter = np.zeros(len(c))
 	for i in range(len(c)):
 		currentpoint =  c[i,0]
+		if i==70:
+			checkkkk = 0
 		for j in range(len(c)):
 			if (distance_calculation(currentpoint,c[j,0])>=distance):
+				perimeter[i] = perimeter[i] + distance_calculation(currentpoint,c[j,0])
 				currentpoint = c[j,0]
-				count[i] = count[i] + 1
-		count[i] = count[i] + 1 
-	print(min(count),'-----',distance,'-----',distance/beginning_distance)
-	perimeter.append(min(count))
+		perimeter[i] = perimeter[i]+ distance_calculation(currentpoint, c[j,0])
+	print(min(perimeter),'-----',np.where(perimeter == min(perimeter)),'----',min(perimeter)/beginning_distance,'-----',distance,'-----',distance/beginning_distance)
+	p.append((min(perimeter))/beginning_distance)
 	BD_Ratio.append(distance/beginning_distance)
 	distance = distance * 0.8
-	if min(count)==len(c):
-		break
+	if p[len(p)-1]==p[len(p)-2]:
+		check += 1
+		if check==4:
+			break
 
 fig, ax = plt.subplots()
-ax.plot(BD_Ratio,perimeter)
+ax.scatter(BD_Ratio,p)
 ax.set_yscale('log')
 ax.set_xscale('log')
 plt.show()
