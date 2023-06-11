@@ -4,7 +4,7 @@ import math
 import matplotlib.pyplot as plt
 
 #Store the PNG image
-image = cv2.imread('circle.png')
+image = cv2.imread('CROPPED.png')
 
 #Convert the image to grayscale
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -51,14 +51,12 @@ while True:
 	perimeter = np.zeros(len(c))
 	for i in range(len(c)):
 		currentpoint =  c[i,0]
-		if i==70:
-			checkkkk = 0
 		for j in range(len(c)):
 			if (distance_calculation(currentpoint,c[j,0])>=distance):
 				perimeter[i] = perimeter[i] + distance_calculation(currentpoint,c[j,0])
 				currentpoint = c[j,0]
 		perimeter[i] = perimeter[i]+ distance_calculation(currentpoint, c[j,0])
-	print(min(perimeter),'-----',np.where(perimeter == min(perimeter)),'----',min(perimeter)/beginning_distance,'-----',distance,'-----',distance/beginning_distance)
+	print(min(perimeter),'----',min(perimeter)/beginning_distance)
 	p.append((min(perimeter))/beginning_distance)
 	BD_Ratio.append(distance/beginning_distance)
 	distance = distance * 0.8
@@ -67,8 +65,31 @@ while True:
 		if check==4:
 			break
 
+def estimate_coef(x, y):
+	# number of observations/points
+	n = np.size(x)
+    # mean of x and y vector
+	m_x = np.mean(x)
+	m_y = np.mean(y)
+
+	# calculating cross-deviation and deviation about x
+	SS_xy = np.sum(y*x) - n*m_y*m_x
+	SS_xx = np.sum(x*x) - n*m_x*m_x
+
+	# calculating regression coefficients
+	b_1 = SS_xy / SS_xx
+	b_0 = m_y - b_1*m_x
+
+	return (b_0, b_1)
+
+BD_Ratio = np.array(BD_Ratio)
+p = np.array(p)
 fig, ax = plt.subplots()
 ax.scatter(BD_Ratio,p)
 ax.set_yscale('log')
 ax.set_xscale('log')
+c,m = estimate_coef(BD_Ratio,p)
+p_Pred = m*BD_Ratio + c
+
+
 plt.show()
