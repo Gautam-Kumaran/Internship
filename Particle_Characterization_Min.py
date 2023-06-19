@@ -45,7 +45,7 @@ def length_calculation(point1,point2):
 area = cv2.contourArea(c)*1.0816
 print(area)
 Diameter = (math.sqrt((4*area)/math.pi))
-Stick_Length = Diameter
+Stick_Length = Diameter * 0.8
 p = []
 BD_Ratio = []
 count = np.zeros(len(c))
@@ -65,9 +65,9 @@ while True:
 				perimeter[i] = perimeter[i] + length_calculation(currentpoint,c[j,0])
 				currentpoint = c[j,0]
 		perimeter[i] = perimeter[i]+ length_calculation(currentpoint, c[j,0])
-	print(np.mean(perimeter),'----',np.mean(perimeter)/Diameter)
+	print(min(perimeter),'----',min(perimeter)/Diameter)
 	# Storing P/D and B/D
-	p.append((np.mean(perimeter))/Diameter)
+	p.append((min(perimeter))/Diameter)
 	BD_Ratio.append(Stick_Length/Diameter)
 	# Reducing stick length
 	Stick_Length = Stick_Length * 0.8
@@ -79,5 +79,5 @@ while True:
 BD_Ratio = np.array(BD_Ratio)
 p = np.array(p)
 
-np.savetxt('data.csv', BD_Ratio, delimiter=',')
-np.savetxt('p.csv', p, delimiter=',')
+np.savetxt('data2.csv', BD_Ratio, delimiter=',')
+np.savetxt('p2.csv', p, delimiter=',')

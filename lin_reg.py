@@ -2,29 +2,30 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import numpy as np
 
-BD_Ratio = np.loadtxt('data.csv', delimiter=',')
-p = np.loadtxt('p.csv', delimiter=',')
+BD_Ratio = np.loadtxt('data2.csv', delimiter=',')
+p = np.loadtxt('p2.csv', delimiter=',')
 
+Data = np.loadtxt('Particle_Data.csv',delimiter=',')
 
+x = np.zeros(len(Data))
+y = np.zeros(len(Data))
+for i in range(len(Data)):
+    x[i] = Data[i,0]
+    y[i] = Data[i,1]
+
+# Create ScatterPlot
 fig = plt.figure()
 ax=plt.gca()
-ax.scatter(BD_Ratio,p,c="blue",alpha=0.95,edgecolors='none', label='data')
+#ax.scatter(BD_Ratio,p,c="blue",alpha=0.95,edgecolors='none', label='data')
+ax.scatter(x,y,c="red",alpha=0.95,edgecolors='none', label='data')
 ax.set_yscale('log')
 ax.set_xscale('log')
 
-def ExpFunc(x, a, b):
+def PowerFunc(x, a, b):
     return a * np.power(x, b)
 
-'''
-popt, pcov = curve_fit(ExpFunc, BD_Ratio, p)
-plt.plot(newX, ExpFunc(newX, *popt), 'r-', 
-         label="({0:.3f}*x**{1:.3f})".format(*popt))
-print ("Exponential Fit: y = (a*(x**b))")
-print ("\ta = popt[0] = {0}\n\tb = popt[1] = {1}".format(*popt))
-'''
-
 def R_squared(xdata,ydata,popt,pcov):
-	residuals = ydata - ExpFunc(xdata, *popt)
+	residuals = ydata - PowerFunc(xdata, *popt)
 	ss_res = np.sum(residuals**2)
 	ss_tot = np.sum((ydata-np.mean(ydata))**2)
 	length = len(BD_Ratio)
@@ -32,18 +33,34 @@ def R_squared(xdata,ydata,popt,pcov):
 	return r_squared
 
 length = len(BD_Ratio)
-for i in range(2,length):
-    Xval =  BD_Ratio[0:i]
-    Yval = p[0:i]
-    #newX = np.linspace(BD_Ratio[i],BD_Ratio[0],i)
-    #print(BD_Ratio[i],BD_Ratio[0])
-    popt, pcov = curve_fit(ExpFunc,Xval, Yval)
-    plt.plot(Xval, ExpFunc(Xval, *popt), 'r-', label="({0:.3f}*x**{1:.3f})".format(*popt))
+Startpos = length
+
+'''
+for i in range(length-2,0,-2):
+    Xval =  x[i:Startpos]
+    Yval = y[i:Startpos]
+    popt, pcov = curve_fit(PowerFunc,Xval,Yval)
     R2 = R_squared(Xval,Yval,popt,pcov)
     print(R2)
-'''		if R2 < 0.98:
-		BD_Ratio = BD_Ratio[i:length]
-		p = p[i:length]
-'''	
+    if R2 < 0.90:
+        Startpos = i
+        plt.plot(Xval, PowerFunc(Xval, *popt), color = 'k', label=)
 
+Startpos = length'''
+
+for i in range(length-2,0,-2):
+    Xval =  x[i:Startpos]
+    Yval = y[i:Startpos]
+    popt, pcov = curve_fit(PowerFunc,Xval,Yval)
+    R2 = R_squared(Xval,Yval,popt,pcov)
+    print(R2)
+    if R2 < 0.98:
+        Startpos = i
+        plt.plot(Xval, PowerFunc(Xval, *popt), color = 'b', label=popt[1])
+
+
+plt.plot(Xval, PowerFunc(Xval, *popt),color = 'k', label=popt)
+plt.xlabel('B/D')
+plt.ylabel('P/D')
+plt.legend()
 plt.show()
