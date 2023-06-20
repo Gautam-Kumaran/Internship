@@ -6,13 +6,30 @@ from scipy.optimize import curve_fit
 
 
 # Store the PNG image
-image = cv2.imread('CROPPED.png')
-
+image = cv2.imread('toyura PARTICLE CROPPED.png')
 # Convert the image to grayscale
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
+def gamma_correction(image, gamma):
+    # Normalize pixel values
+    normalized_image = image / 255.0
+
+    # Apply gamma correction
+    corrected_image = np.power(normalized_image, 1 / gamma)
+
+    # Denormalize pixel values
+    corrected_image = (corrected_image * 255).astype(np.uint8)
+
+    return corrected_image
+
+# Apply gamma correction with gamma = 1.8
+gamma_value = 2.5
+corrected_image = gamma_correction(gray, gamma_value)
+
+cv2.imwrite('gamma_image.png', corrected_image)
+
 # Use Otsu's method to determine the optimal threshold value
-_ , thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_OTSU)
+_ , thresh = cv2.threshold(corrected_image, 0, 255, cv2.THRESH_OTSU)
 
 # Save binarized image
 cv2.imwrite('Binarized_image.png', thresh)
