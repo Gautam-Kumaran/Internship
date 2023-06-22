@@ -6,7 +6,8 @@ from scipy.optimize import curve_fit
 
 
 # Store the PNG image
-image = cv2.imread('toyura PARTICLE CROPPED.png')
+image = cv2.imread('circle.png')
+
 # Convert the image to grayscale
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -22,14 +23,20 @@ def gamma_correction(image, gamma):
 
     return corrected_image
 
-# Apply gamma correction with gamma = 1.8
-gamma_value = 2.5
-corrected_image = gamma_correction(gray, gamma_value)
+gammacorrection = input('would you like to gamma correct the image?(y or n)\n')
+if gammacorrection == 'y':
 
-cv2.imwrite('gamma_image.png', corrected_image)
+	gamma_value = float(input('what gamma value should be taken\n'))
+	gray = gamma_correction(gray, gamma_value)
+
+cv2.imwrite('gamma_image.png', gray)
 
 # Use Otsu's method to determine the optimal threshold value
-_ , thresh = cv2.threshold(corrected_image, 0, 255, cv2.THRESH_OTSU)
+_ , thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_OTSU)
+
+invert = input('do you want to invert image\n')
+if invert == 'y':
+	thresh = np.invert(thresh)
 
 # Save binarized image
 cv2.imwrite('Binarized_image.png', thresh)
@@ -43,23 +50,27 @@ for x in range(len(thresh)):
 	for y in range(len(thresh[x])):
 		thresh[x,y] = 0
 
+cv2.drawContours(thresh, cnts, -1, 255, 3)
+
+'''
 # Make only biggest contour white
 for i in range(len(c)):
 	x = c[i,0,0]
 	y= c[i,0,1]
 	thresh[y,x] = 255
-cv2.imwrite("Original Contour2.png", thresh)
+'''
 
+cv2.imwrite("Original Contour2.png", thresh)
 print(len(c))
 
 # Distance Formula
 def length_calculation(point1,point2):
-	return(((point1[0]-point2[0])**2+(point1[1]-point2[1])**2)**(1/2))*1.04
+	return(((point1[0]-point2[0])**2+(point1[1]-point2[1])**2)**(1/2))
 
 # Reshape the contour to a 2D array of coordinates
 # contour = c.squeeze()
 
-area = cv2.contourArea(c)*1.0816
+area = cv2.contourArea(c)
 print(area)
 Diameter = (math.sqrt((4*area)/math.pi))
 Stick_Length = Diameter * 0.8
