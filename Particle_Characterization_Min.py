@@ -6,7 +6,7 @@ from scipy.optimize import curve_fit
 
 
 # Store the PNG image
-image = cv2.imread('circle.png')
+image = cv2.imread('toyura22.png')
 
 # Convert the image to grayscale
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -50,15 +50,12 @@ for x in range(len(thresh)):
 	for y in range(len(thresh[x])):
 		thresh[x,y] = 0
 
-cv2.drawContours(thresh, cnts, -1, 255, 3)
 
-'''
 # Make only biggest contour white
 for i in range(len(c)):
 	x = c[i,0,0]
 	y= c[i,0,1]
 	thresh[y,x] = 255
-'''
 
 cv2.imwrite("Original Contour2.png", thresh)
 print(len(c))
@@ -68,10 +65,15 @@ def length_calculation(point1,point2):
 	return(((point1[0]-point2[0])**2+(point1[1]-point2[1])**2)**(1/2))
 
 # Reshape the contour to a 2D array of coordinates
-# contour = c.squeeze()
 
 area = cv2.contourArea(c)
 print(area)
+'''x = int(len(thresh[1])/2)
+y = int(len(thresh)/2)
+cv2.circle(thresh,(x,y),4,255,2)
+cv2.imshow('img', thresh)
+cv2.waitKey(0)
+cv2.destroyAllWindows()'''
 Diameter = (math.sqrt((4*area)/math.pi))
 Stick_Length = Diameter * 0.8
 p = []

@@ -14,6 +14,7 @@ def R_squared(xdata,ydata,pred_y):
 length = len(x)
 Startpos = length
 fig, ax1 = plt.subplots(1, 1, figsize=(8,6))
+
 '''
 count = 0
 i = length - 2
@@ -39,8 +40,6 @@ ax1.scatter(x, y) # original scale!
 for i in range(len(x)):
     ax1.annotate(i, (x[i], y[i]),color = 'r')
 
-ax1.set_xlim(0.001,1)
-ax1.set_ylim(1,20)
 ax1.set_xscale('log')
 ax1.set_yscale('log')
 ax1.legend()
@@ -59,14 +58,13 @@ Yval = y[int(pt1):int(pt2)]
 
 fig, ax1 = plt.subplots(1, 1, figsize=(8,6))
 ax1.scatter(x, y) # original scale!
-ax1.set_xlim(0.001,1)
-ax1.set_ylim(1,20)
+
 ax1.set_xscale('log')
 ax1.set_yscale('log')
 
 coefs = np.polyfit(np.log(Xval), np.log(Yval), 1)
 pred_y = np.multiply((np.log(Xval)), coefs[0]) + coefs[1]
-ax1.plot((Xval), np.exp(pred_y), 'k--', label = (coefs))
+ax1.plot((Xval), np.exp(pred_y), 'k--', label = (coefs[0]))
 R2 = R_squared(np.log(Xval),np.log(Yval),pred_y)
 print('R2 = ', R2)
 
@@ -76,7 +74,7 @@ Yval = y[int(pt3):int(pt4)]
 
 coefs = np.polyfit(np.log(Xval), np.log(Yval), 1)
 pred_y = np.multiply((np.log(Xval)), coefs[0]) + coefs[1]
-ax1.plot((Xval), np.exp(pred_y), 'k--', label = (coefs))
+ax1.plot((Xval), np.exp(pred_y), 'k--', label = (coefs[0]))
 R2 = R_squared(np.log(Xval),np.log(Yval),pred_y)
 print('R2 = ', R2)
 
