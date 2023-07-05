@@ -4,9 +4,9 @@ import math
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
-
 # Store the PNG image
-image = cv2.imread('toyura22.png')
+image = cv2.imread('ASTM 3.png')
+cv2.imwrite('gamma_image.png', image)
 
 # Convert the image to grayscale
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -68,14 +68,9 @@ def length_calculation(point1,point2):
 
 area = cv2.contourArea(c)
 print(area)
-'''x = int(len(thresh[1])/2)
-y = int(len(thresh)/2)
-cv2.circle(thresh,(x,y),4,255,2)
-cv2.imshow('img', thresh)
-cv2.waitKey(0)
-cv2.destroyAllWindows()'''
+
 Diameter = (math.sqrt((4*area)/math.pi))
-Stick_Length = Diameter * 0.8
+Stick_Length = Diameter * 0.8 * 0.8
 p = []
 BD_Ratio = []
 count = np.zeros(len(c))
