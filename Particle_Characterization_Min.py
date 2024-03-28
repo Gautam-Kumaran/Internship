@@ -2,11 +2,9 @@ import cv2
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-from scipy.optimize import curve_fit
 
 # Store the PNG image
-image = cv2.imread('ASTM 3.png')
-cv2.imwrite('gamma_image.png', image)
+image = cv2.imread('ASTM 1.png')
 
 # Convert the image to grayscale
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -42,7 +40,8 @@ if invert == 'y':
 cv2.imwrite('Binarized_image.png', thresh)
 
 # Find the largest contour in the threshold image
-cnts,_ = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+
+cnts,_ = cv2.findContours(thresh, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
 c = max(cnts, key=cv2.contourArea)
 
 # Make image full black
@@ -50,35 +49,30 @@ for x in range(len(thresh)):
 	for y in range(len(thresh[x])):
 		thresh[x,y] = 0
 
-
 # Make only biggest contour white
 for i in range(len(c)):
 	x = c[i,0,0]
 	y= c[i,0,1]
 	thresh[y,x] = 255
 
-cv2.imwrite("Original Contour2.png", thresh)
+cv2.imwrite("Contour.png", thresh)
 print(len(c))
 
 # Distance Formula
 def length_calculation(point1,point2):
 	return(((point1[0]-point2[0])**2+(point1[1]-point2[1])**2)**(1/2))
 
-# Reshape the contour to a 2D array of coordinates
-
 area = cv2.contourArea(c)
 print(area)
 
 Diameter = (math.sqrt((4*area)/math.pi))
-Stick_Length = Diameter * 0.8 * 0.8
+Stick_Length = Diameter * 0.8
 p = []
 BD_Ratio = []
-count = np.zeros(len(c))
 check = 0
 
 # While loop to repeat for different stick lengths
 while True:
-	sum = 0
 	# Store perimeter with each different inital point
 	perimeter = np.zeros(len(c))
 	# For loop to find perimeter for each initial point
@@ -98,11 +92,11 @@ while True:
 	Stick_Length = Stick_Length * 0.8
 	if p[len(p)-1]==p[len(p)-2]:
 		check += 1
-		if check==4:
+		if check==6:
 			break
 
 BD_Ratio = np.array(BD_Ratio)
 p = np.array(p)
 
-np.savetxt('data2.csv', BD_Ratio, delimiter=',')
-np.savetxt('p2.csv', p, delimiter=',')
+np.savetxt('data.csv', BD_Ratio, delimiter=',')
+np.savetxt('p.csv', p, delimiter=',')
